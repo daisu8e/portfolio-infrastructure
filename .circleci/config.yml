@@ -1,0 +1,105 @@
+version: 2
+jobs:
+
+  test: &test
+    docker:
+      - image: hashicorp/terraform:0.12.5
+    steps:
+      - checkout
+      - run:
+          name: terraform init
+          command: terraform init -input=false ./$PORTFOLIO_ENV
+      - run:
+          name: terraform plan
+          command: terraform plan ./$PORTFOLIO_ENV
+
+  deploy: &deploy
+    docker:
+      - image: hashicorp/terraform:0.12.5
+    steps:
+      - checkout
+      - run:
+          name: terraform init
+          command: terraform init -input=false ./$PORTFOLIO_ENV
+      - run:
+          name: terraform apply
+          command: terraform apply -auto-approve ./$PORTFOLIO_ENV
+
+  test_development:
+    <<: *test
+    environment:
+      PORTFOLIO_ENV: development
+  deploy_development:
+    <<: *deploy
+    environment:
+      PORTFOLIO_ENV: development
+
+  test_testing:
+    <<: *test
+    environment:
+      PORTFOLIO_ENV: testing
+  deploy_testing:
+    <<: *deploy
+    environment:
+      PORTFOLIO_ENV: testing
+
+  test_staging:
+    <<: *test
+    environment:
+      PORTFOLIO_ENV: staging
+  deploy_staging:
+    <<: *deploy
+    environment:
+      PORTFOLIO_ENV: staging
+
+  test_production:
+    <<: *test
+    environment:
+      PORTFOLIO_ENV: production
+  deploy_production:
+    <<: *deploy
+    environment:
+      PORTFOLIO_ENV: production
+
+workflows:
+  version: 2
+
+  development:
+    jobs:
+      - test_development:
+          filters:
+            branches:
+              only: development
+      - deploy_development:
+          requires:
+            - test_development
+
+  testing:
+    jobs:
+      - test_testing:
+          filters:
+            branches:
+              only: testing
+      - deploy_testing:
+          requires:
+            - test_testing
+
+#  production:
+#    jobs:
+#      - test_staging:
+#          filters:
+#            branches:
+#              only: master
+#      - deploy_staging:
+#          requires:
+#            - test_staging
+#      - test_production:
+#          requires:
+#            - deploy_staging
+#      - approve:
+#          type: approval
+#          requires:
+#            - test_production
+#      - deploy_production:
+#          requires:
+#            - approve
