@@ -9,17 +9,6 @@ locals {
   ]
 }
 
-resource "aws_route53_record" "cdn" {
-  zone_id = var.dns.zone_id
-  name = var.cdn.domain
-  type = "A"
-  alias {
-    zone_id = aws_cloudfront_distribution.cdn.hosted_zone_id
-    name = aws_cloudfront_distribution.cdn.domain_name
-    evaluate_target_health = false
-  }
-}
-
 resource "aws_s3_bucket" "cdn" {
   bucket = var.cdn.domain
   force_destroy = true
@@ -97,6 +86,17 @@ resource "aws_s3_bucket" "logs" {
     expiration {
       days = "180"
     }
+  }
+}
+
+resource "aws_route53_record" "cdn" {
+  zone_id = var.dns.zone_id
+  name = var.cdn.domain
+  type = "A"
+  alias {
+    zone_id = aws_cloudfront_distribution.cdn.hosted_zone_id
+    name = aws_cloudfront_distribution.cdn.domain_name
+    evaluate_target_health = false
   }
 }
 

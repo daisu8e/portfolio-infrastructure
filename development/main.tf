@@ -1,7 +1,7 @@
 locals {
   infrastructure = {
     env = "development"
-    domain_prefix = "dev."
+    domain_prefix = "d."
 #    waf = true
   }
 }

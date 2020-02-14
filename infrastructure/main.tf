@@ -1,25 +1,22 @@
 variable "infrastructure" {}
 
 locals {
-  self = var.infrastructure
-
-  resource_name = "portfolio-${local.self.env}"
-  root_domain = "daisu8e.net"
-  cdn_domain = "${local.self.domain_prefix}${local.root_domain}"
+  resource_name = "portfolio-${var.infrastructure.env}"
+  root_domain = "daisu8e.com"
+  cdn_domain = "${var.infrastructure.domain_prefix}${local.root_domain}"
 
   dns = {
     domain = local.root_domain
   }
   ssl = {
-    name = local.resource_name
     domain = local.root_domain
   }
-  waf = {
-    name = local.resource_name
-  }
+#  waf = {
+#    name = local.resource_name
+#  }
   cdn = {
     domain = local.cdn_domain
-#    waf = local.self waf
+#    waf = var.infrastructure.waf
   }
 }
 
