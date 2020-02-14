@@ -1,7 +1,8 @@
 locals {
   infrastructure = {
     env = "staging"
-    domain_prefix = "stg-"
+    domain_prefix = "s."
+#    waf = true
   }
 }
 

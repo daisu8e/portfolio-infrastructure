@@ -2,6 +2,7 @@ locals {
   infrastructure = {
     env = "production"
     domain_prefix = ""
+#    waf = true
   }
 }
 

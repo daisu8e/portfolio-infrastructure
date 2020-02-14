@@ -1,7 +1,8 @@
 locals {
   infrastructure = {
     env = "testing"
-    domain_prefix = "tst-"
+    domain_prefix = "t."
+#    waf = true
   }
 }
 
