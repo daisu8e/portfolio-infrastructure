@@ -3,7 +3,7 @@ jobs:
 
   test: &test
     docker:
-      - image: hashicorp/terraform:0.12.5
+      - image: hashicorp/terraform:0.12.18
     steps:
       - checkout
       - run:
@@ -15,7 +15,7 @@ jobs:
 
   deploy: &deploy
     docker:
-      - image: hashicorp/terraform:0.12.5
+      - image: hashicorp/terraform:0.12.18
     steps:
       - checkout
       - run:
@@ -24,15 +24,6 @@ jobs:
       - run:
           name: terraform apply
           command: terraform apply -auto-approve ./$PORTFOLIO_ENV
-
-  test_development:
-    <<: *test
-    environment:
-      PORTFOLIO_ENV: development
-  deploy_development:
-    <<: *deploy
-    environment:
-      PORTFOLIO_ENV: development
 
   test_testing:
     <<: *test
@@ -64,16 +55,6 @@ jobs:
 workflows:
   version: 2
 
-  development:
-    jobs:
-      - test_development:
-          filters:
-            branches:
-              only: development
-      - deploy_development:
-          requires:
-            - test_development
-
   testing:
     jobs:
       - test_testing:
@@ -84,22 +65,22 @@ workflows:
           requires:
             - test_testing
 
-#  production:
-#    jobs:
-#      - test_staging:
-#          filters:
-#            branches:
-#              only: master
-#      - deploy_staging:
-#          requires:
-#            - test_staging
-#      - test_production:
-#          requires:
-#            - deploy_staging
-#      - approve:
-#          type: approval
-#          requires:
-#            - test_production
-#      - deploy_production:
-#          requires:
-#            - approve
+  production:
+    jobs:
+      - test_staging:
+          filters:
+            branches:
+              only: master
+      - deploy_staging:
+          requires:
+            - test_staging
+      - test_production:
+          requires:
+            - deploy_staging
+      - approve:
+          type: approval
+          requires:
+            - test_production
+      - deploy_production:
+          requires:
+            - approve
