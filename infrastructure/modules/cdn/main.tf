@@ -19,6 +19,24 @@ resource "aws_s3_bucket" "cdn" {
   }
 }
 
+data "aws_iam_policy_document" "cdn" {
+  statement {
+    sid = "PublicRead"
+    effect = "Allow"
+    principals {
+      type = "*"
+      identifiers = ["*"]
+    }
+    actions = ["s3:GetObject"]
+    resources = ["arn:aws:s3:::${aws_s3_bucket.cdn.id}/*"]
+  }
+}
+
+resource "aws_s3_bucket_policy" "b" {
+  bucket = aws_s3_bucket.cdn.id
+  policy = data.aws_iam_policy_document.cdn.json
+}
+
 resource "aws_s3_bucket_object" "default_files" {
   count = length(local.files)
   bucket = aws_s3_bucket.cdn.bucket
