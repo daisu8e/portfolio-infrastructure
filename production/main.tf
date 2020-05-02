@@ -13,17 +13,9 @@ provider "aws" {
   region = "us-east-1"
 }
 
-locals {
-  infrastructure = {
-    env = "production"
-    domain_prefix = ""
-#    waf = true
-  }
-}
-
 module "infrastructure" {
   source = "../infrastructure"
-  infrastructure = local.infrastructure
+  infrastructure = var.infrastructure
 }
 
 output "result" {
