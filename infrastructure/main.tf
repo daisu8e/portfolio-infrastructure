@@ -11,12 +11,8 @@ locals {
   ssl = {
     domain = local.root_domain
   }
-#  waf = {
-#    name = local.resource_name
-#  }
   cdn = {
     domain = local.cdn_domain
-#    waf = var.infrastructure.waf
   }
 }
 
@@ -31,17 +27,11 @@ module "ssl" {
   dns = module.dns
 }
 
-#module "waf" {
-#  source = "./modules/waf"
-#  waf = local.waf
-#}
-
 module "cdn" {
   source = "./modules/cdn"
   cdn = local.cdn
   dns = module.dns
   ssl = module.ssl
-#  waf = module.waf
 }
 
 output "result" {
@@ -57,6 +47,5 @@ ${module.ssl.result}
 ${module.cdn.result}
 RESULT
 /*
-${module.waf.result}
 */
 }

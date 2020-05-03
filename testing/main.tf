@@ -2,7 +2,6 @@ locals {
   infrastructure = {
     env = "testing"
     domain_prefix = "t."
-#    waf = true
   }
 }
 

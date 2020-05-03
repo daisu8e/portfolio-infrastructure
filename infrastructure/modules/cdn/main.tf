@@ -90,7 +90,6 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
   is_ipv6_enabled = true
-#  web_acl_id = var.cdn.waf ? var.waf.web_acl_id : ""
   logging_config {
     bucket = aws_s3_bucket.logs.bucket_domain_name
   }
