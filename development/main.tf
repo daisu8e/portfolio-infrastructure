@@ -8,8 +8,8 @@ locals {
 terraform {
   required_version = "= 0.12.18"
   backend "s3" {
-    bucket = "portfolio.daisu8e.com.tfstates.old"
-    key = "development/terraform.tfstate"
+    bucket = "d.daisu8e.com.terraform.old"
+    key = "terraform.tfstate"
     region = "us-east-1"
   }
 }
