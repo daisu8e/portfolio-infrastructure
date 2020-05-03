@@ -1,3 +1,11 @@
+locals {
+  infrastructure = {
+    env = "development"
+    domain_prefix = "d."
+#    waf = true
+  }
+}
+
 terraform {
   required_version = "= 0.12.18"
   backend "s3" {
@@ -15,7 +23,7 @@ provider "aws" {
 
 module "infrastructure" {
   source = "../infrastructure"
-  infrastructure = var.infrastructure
+  infrastructure = local.infrastructure
 }
 
 output "result" {
