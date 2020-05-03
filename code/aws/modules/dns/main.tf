@@ -1,11 +1,11 @@
 variable "dns" {}
 
-data "aws_route53_zone" "domain" {
+data "aws_route53_zone" "dns" {
   name = "${var.dns.domain}."
 }
 
 output "zone_id" {
-  value = data.aws_route53_zone.domain.id
+  value = data.aws_route53_zone.dns.id
 }
 
 output "result" {

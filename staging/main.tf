@@ -1,6 +1,6 @@
 locals {
-  infrastructure = {
-    env = "staging"
+  env = {
+    name = "staging"
     domain_prefix = "s."
   }
 }
@@ -20,11 +20,11 @@ provider "aws" {
   region = "us-east-1"
 }
 
-module "infrastructure" {
-  source = "../infrastructure"
-  infrastructure = local.infrastructure
+module "code" {
+  source = "../code"
+  env = local.env
 }
 
 output "result" {
-  value = module.infrastructure.result
+  value = "\n${module.code.result}"
 }

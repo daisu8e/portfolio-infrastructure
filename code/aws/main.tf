@@ -1,9 +1,9 @@
-variable "infrastructure" {}
+variable "env" {}
 
 locals {
-  resource_name = "portfolio-${var.infrastructure.env}"
+  resource_name = "portfolio-${var.env.name}"
   root_domain = "daisu8e.com"
-  cdn_domain = "${var.infrastructure.domain_prefix}${local.root_domain}"
+  cdn_domain = "${var.env.domain_prefix}${local.root_domain}"
 
   dns = {
     domain = local.root_domain
