@@ -1,7 +1,8 @@
 locals {
   env = {
-    name = "testing"
-    domain_prefix = "t."
+    name = "portfolio-testing"
+    root_domain = "daisu8e.com"
+    app_domain = "t.daisu8e.com"
   }
 }
 
@@ -26,5 +27,9 @@ module "code" {
 }
 
 output "result" {
-  value = "\n${module.code.result}"
+  value = <<RESULT
+the following:
+
+${module.code.result}
+RESULT
 }

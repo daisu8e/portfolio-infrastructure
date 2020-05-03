@@ -1,18 +1,14 @@
 variable "env" {}
 
 locals {
-  resource_name = "portfolio-${var.env.name}"
-  root_domain = "daisu8e.com"
-  cdn_domain = "${var.env.domain_prefix}${local.root_domain}"
-
   dns = {
-    domain = local.root_domain
+    domain = var.env.root_domain
   }
   ssl = {
-    domain = local.root_domain
+    domain = var.env.root_domain
   }
   cdn = {
-    domain = local.cdn_domain
+    domain = var.env.app_domain
   }
 }
 
@@ -36,16 +32,20 @@ module "cdn" {
 
 output "result" {
   value = <<RESULT
-{
-  resource_name = ${local.resource_name}
-  root_domain = ${local.root_domain}
-  cdn_domain = ${local.cdn_domain}
+aws = {
+  dns = {
+    domain = ${var.env.root_domain}
+  }
+  ssl = {
+    domain = ${var.env.root_domain}
+  }
+  cdn = {
+    domain = ${var.env.app_domain}
+  }
 }
 
 ${module.dns.result}
 ${module.ssl.result}
 ${module.cdn.result}
 RESULT
-/*
-*/
 }

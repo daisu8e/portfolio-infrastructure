@@ -6,7 +6,7 @@ module "aws" {
 }
 
 output "result" {
-  value = join("\n", [
-    module.aws.result,
-  ])
+  value = <<RESULT
+${module.aws.result}
+RESULT
 }
