@@ -1,6 +1,6 @@
 variable "cdn" {}
 variable "route53_zone" {}
-variable "ssl" {}
+variable "acm" {}
 
 locals {
   files = [
@@ -55,7 +55,7 @@ resource "aws_cloudfront_distribution" "cdn" {
   enabled = true
   aliases = [var.cdn.domain]
   viewer_certificate {
-    acm_certificate_arn = var.ssl.certificate_arn
+    acm_certificate_arn = var.acm.certificate_arn
     ssl_support_method = "sni-only"
   }
   origin {

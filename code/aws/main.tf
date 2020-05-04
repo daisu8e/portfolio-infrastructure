@@ -4,7 +4,7 @@ locals {
   route53_zone = {
     domain = var.env.root_domain
   }
-  ssl = {
+  acm = {
     domain = var.env.root_domain
   }
   cdn = {
@@ -17,16 +17,16 @@ module "route53_zone" {
   route53_zone = local.route53_zone
 }
 
-module "ssl" {
-  source = "./modules/ssl"
-  ssl = local.ssl
+module "acm" {
+  source = "./modules/acm"
+  acm = local.acm
 }
 
 module "cdn" {
   source = "./modules/cdn"
   cdn = local.cdn
   route53_zone = module.route53_zone
-  ssl = module.ssl
+  acm = module.acm
 }
 
 output "result" {
@@ -35,7 +35,7 @@ aws = {
   route53_zone = {
     domain = ${var.env.root_domain}
   }
-  ssl = {
+  acm = {
     domain = ${var.env.root_domain}
   }
   cdn = {
@@ -44,7 +44,7 @@ aws = {
 }
 
 ${module.route53_zone.result}
-${module.ssl.result}
+${module.acm.result}
 ${module.cdn.result}
 RESULT
 }
