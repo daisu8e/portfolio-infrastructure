@@ -1,15 +1,15 @@
 locals {
   env = {
-    name = "portfolio-development"
+    name = "portfolio-staging"
     root_domain = "daisu8e.com"
-    app_domain = "d.daisu8e.com"
+    app_domain = "s.daisu8e.com"
   }
 }
 
 terraform {
   required_version = "= 0.12.18"
   backend "s3" {
-    bucket = "d.daisu8e.com.terraform.old"
+    bucket = "s.daisu8e.com.terraform.old"
     key = "terraform.tfstate"
     region = "us-east-1"
   }
@@ -22,7 +22,7 @@ provider "aws" {
 }
 
 module "code" {
-  source = "../code"
+  source = "../../code"
   env = local.env
 }
 

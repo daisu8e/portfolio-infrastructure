@@ -8,10 +8,10 @@ jobs:
       - checkout
       - run:
           name: terraform init
-          command: terraform init -input=false ./$PORTFOLIO_ENV
+          command: terraform init -input=false ./env/$PORTFOLIO_ENV
       - run:
           name: terraform plan
-          command: terraform plan ./$PORTFOLIO_ENV
+          command: terraform plan ./env/$PORTFOLIO_ENV
 
   deploy: &deploy
     docker:
@@ -20,10 +20,10 @@ jobs:
       - checkout
       - run:
           name: terraform init
-          command: terraform init -input=false ./$PORTFOLIO_ENV
+          command: terraform init -input=false ./env/$PORTFOLIO_ENV
       - run:
           name: terraform apply
-          command: terraform apply -auto-approve ./$PORTFOLIO_ENV
+          command: terraform apply -auto-approve ./env/$PORTFOLIO_ENV
 
   test_testing:
     <<: *test
