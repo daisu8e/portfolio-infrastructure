@@ -1,6 +1,6 @@
-variable "cdn" {}
-variable "dns" {}
-variable "ssl" {}
+variable "cloudfront" {}
+variable "route53_zone" {}
+variable "acm" {}
 
 locals {
   files = [
@@ -9,8 +9,8 @@ locals {
   ]
 }
 
-resource "aws_s3_bucket" "cdn" {
-  bucket = var.cdn.domain
+resource "aws_s3_bucket" "this" {
+  bucket = var.cloudfront.domain
   force_destroy = true
   acl = "public-read"
   website {
@@ -19,7 +19,7 @@ resource "aws_s3_bucket" "cdn" {
   }
 }
 
-data "aws_iam_policy_document" "cdn" {
+data "aws_iam_policy_document" "this" {
   statement {
     sid = "PublicRead"
     effect = "Allow"
@@ -28,18 +28,18 @@ data "aws_iam_policy_document" "cdn" {
       identifiers = ["*"]
     }
     actions = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::${aws_s3_bucket.cdn.id}/*"]
+    resources = ["arn:aws:s3:::${aws_s3_bucket.this.id}/*"]
   }
 }
 
 resource "aws_s3_bucket_policy" "b" {
-  bucket = aws_s3_bucket.cdn.id
-  policy = data.aws_iam_policy_document.cdn.json
+  bucket = aws_s3_bucket.this.id
+  policy = data.aws_iam_policy_document.this.json
 }
 
 resource "aws_s3_bucket_object" "default_files" {
   count = length(local.files)
-  bucket = aws_s3_bucket.cdn.bucket
+  bucket = aws_s3_bucket.this.bucket
   key = local.files[count.index]
   source = "${path.module}/files/${local.files[count.index]}"
   etag = filemd5("${path.module}/files/${local.files[count.index]}")
@@ -51,16 +51,16 @@ resource "aws_s3_bucket_object" "default_files" {
   }
 }
 
-resource "aws_cloudfront_distribution" "cdn" {
+resource "aws_cloudfront_distribution" "this" {
   enabled = true
-  aliases = [var.cdn.domain]
+  aliases = [var.cloudfront.domain]
   viewer_certificate {
-    acm_certificate_arn = var.ssl.certificate_arn
+    acm_certificate_arn = var.acm.certificate_arn
     ssl_support_method = "sni-only"
   }
   origin {
-    origin_id = var.cdn.domain
-    domain_name = aws_s3_bucket.cdn.bucket_domain_name
+    origin_id = var.cloudfront.domain
+    domain_name = aws_s3_bucket.this.bucket_domain_name
   }
   default_root_object = "index.html"
   custom_error_response {
@@ -70,7 +70,7 @@ resource "aws_cloudfront_distribution" "cdn" {
     error_caching_min_ttl = 300
   }
   default_cache_behavior {
-    target_origin_id = var.cdn.domain
+    target_origin_id = var.cloudfront.domain
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods = ["GET", "HEAD"]
     cached_methods = ["GET", "HEAD"]
@@ -90,14 +90,13 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
   is_ipv6_enabled = true
-#  web_acl_id = var.cdn.waf ? var.waf.web_acl_id : ""
   logging_config {
     bucket = aws_s3_bucket.logs.bucket_domain_name
   }
 }
 
 resource "aws_s3_bucket" "logs" {
-  bucket = "${var.cdn.domain}.logs"
+  bucket = "${var.cloudfront.domain}.logs"
   force_destroy = true
   lifecycle_rule {
     enabled = true
@@ -107,13 +106,13 @@ resource "aws_s3_bucket" "logs" {
   }
 }
 
-resource "aws_route53_record" "cdn" {
-  zone_id = var.dns.zone_id
-  name = var.cdn.domain
+resource "aws_route53_record" "this" {
+  zone_id = var.route53_zone.id
+  name = var.cloudfront.domain
   type = "A"
   alias {
-    zone_id = aws_cloudfront_distribution.cdn.hosted_zone_id
-    name = aws_cloudfront_distribution.cdn.domain_name
+    zone_id = aws_cloudfront_distribution.this.hosted_zone_id
+    name = aws_cloudfront_distribution.this.domain_name
     evaluate_target_health = false
   }
 }
