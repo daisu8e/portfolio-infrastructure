@@ -1,5 +1,5 @@
 variable "cdn" {}
-variable "dns" {}
+variable "route53_zone" {}
 variable "ssl" {}
 
 locals {
@@ -107,7 +107,7 @@ resource "aws_s3_bucket" "logs" {
 }
 
 resource "aws_route53_record" "cdn" {
-  zone_id = var.dns.zone_id
+  zone_id = var.route53_zone.id
   name = var.cdn.domain
   type = "A"
   alias {
