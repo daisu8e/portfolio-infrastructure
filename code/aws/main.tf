@@ -7,7 +7,7 @@ locals {
   acm = {
     domain = var.env.root_domain
   }
-  cdn = {
+  cloudfront = {
     domain = var.env.app_domain
   }
 }
@@ -22,9 +22,9 @@ module "acm" {
   acm = local.acm
 }
 
-module "cdn" {
-  source = "./modules/cdn"
-  cdn = local.cdn
+module "cloudfront" {
+  source = "./modules/cloudfront"
+  cloudfront = local.cloudfront
   route53_zone = module.route53_zone
   acm = module.acm
 }
@@ -38,13 +38,13 @@ aws = {
   acm = {
     domain = ${var.env.root_domain}
   }
-  cdn = {
+  cloudfront = {
     domain = ${var.env.app_domain}
   }
 }
 
 ${module.route53_zone.result}
 ${module.acm.result}
-${module.cdn.result}
+${module.cloudfront.result}
 RESULT
 }
