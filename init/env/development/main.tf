@@ -1,6 +1,11 @@
 locals {
   env = {
     name = "portfolio-development"
+    root_domain = "daisu8e.com"
+    app_domain = "d.daisu8e.com"
+    init_domain = "d-init.daisu8e.com"
+    infrastructure_user = "portfolio-development-infrastructure-circleci"
+    application_user = "portfolio-development-application-circleci"
   }
 }
 
@@ -10,8 +15,8 @@ terraform {
     region = "us-east-1"
     shared_credentials_file = "~/.aws/credentials"
     profile = "portfolio-development"
-    bucket = "portfolio-development.daisu8e.com.terraform"
-    key = "init/terraform.tfstate"
+    bucket = "d-init.daisu8e.com.terraform"
+    key = "terraform.tfstate"
   }
 }
 
@@ -27,10 +32,6 @@ module "code" {
   env = local.env
 }
 
-output "code" {
-  value = <<RESULT
-the following:
-
-${module.code.result}
-RESULT
+output "result" {
+  value = "\n\n${module.code.result}"
 }
