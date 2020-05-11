@@ -4,8 +4,6 @@ locals {
     root_domain = "daisu8e.com"
     app_domain = "d.daisu8e.com"
     init_domain = "d-init.daisu8e.com"
-    infrastructure_user = "portfolio-development-infrastructure-circleci"
-    application_user = "portfolio-development-application-circleci"
   }
 }
 

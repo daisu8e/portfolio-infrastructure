@@ -1,6 +1,6 @@
 resource "aws_cloudfront_distribution" "this" {
   enabled = true
-  aliases = [var.website.domain]
+  aliases = [var.application.domain]
   viewer_certificate {
     acm_certificate_arn = var.ssl.acm_certificate_arn
     ssl_support_method = "sni-only"
@@ -40,8 +40,11 @@ resource "aws_cloudfront_distribution" "this" {
     }
   }
   is_ipv6_enabled = true
+  logging_config {
+    bucket = aws_s3_bucket.logs.bucket_domain_name
+  }
 }
 
 resource "aws_cloudfront_origin_access_identity" "this" {
-  comment = var.website.name
+  comment = var.application.name
 }

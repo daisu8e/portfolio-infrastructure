@@ -1,8 +1,14 @@
 variable "env" {}
 
 locals {
-  circleci = {
-    user = var.env.infrastructure_user
+  terraform_backend = {
+    app_domain = var.env.app_domain
+  }
+  user = {
+    prefix = var.env.name
+  }
+  parameter = {
+    prefix = var.env.name
   }
   ssl = {
     name = var.env.name
@@ -12,14 +18,21 @@ locals {
     name = var.env.name
     domain = var.env.init_domain
   }
-  app = {
-    domain = var.env.app_domain
-  }
 }
 
-module "circleci" {
-  source = "./modules/circleci"
-  circleci = local.circleci
+module "terraform_backend" {
+  source = "./modules/terraform_backend"
+  terraform_backend = local.terraform_backend
+}
+
+module "user" {
+  source = "./modules/user"
+  user = local.user
+}
+
+module "parameter" {
+  source = "./modules/parameter"
+  parameter = local.parameter
 }
 
 module "ssl" {
@@ -33,16 +46,12 @@ module "website" {
   ssl = module.ssl
 }
 
-module "app" {
-  source = "./modules/app"
-  app = local.app
-}
-
 output "result" {
   value = join("\n", [
-    module.circleci.result,
+    module.terraform_backend.result,
+    module.user.result,
+    module.parameter.result,
     module.ssl.result,
     module.website.result,
-    module.app.result,
   ])
 }

@@ -1,5 +1,6 @@
-variable "website" {}
+variable "application" {}
 variable "ssl" {}
+variable "ip_white_list" {}
 
 output "result" {
   value = <<RESULT

@@ -1,7 +1,7 @@
-variable "app" {}
+variable "terraform_backend" {}
 
 resource "aws_s3_bucket" "this" {
-  bucket = "${var.app.domain}.terraform"
+  bucket = "${var.terraform_backend.app_domain}.terraform"
   force_destroy = true
   versioning {
     enabled = true
@@ -19,7 +19,7 @@ resource "aws_s3_bucket_public_access_block" "this" {
 output "result" {
   value = <<RESULT
 ${path.module} = {
-  bucket = ${aws_s3_bucket.this.id}
+  s3_bucket = ${aws_s3_bucket.this.id}
 }
 RESULT
 }
