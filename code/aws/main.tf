@@ -11,7 +11,6 @@ locals {
     domain = var.env.root_domain
   }
   application = {
-    name = var.env.name
     domain = var.env.app_domain
   }
 }

@@ -3,22 +3,26 @@ locals {
     name = "portfolio-production"
     root_domain = "daisu8e.com"
     app_domain = "daisu8e.com"
+    init_domain = "p-init.daisu8e.com"
   }
 }
 
 terraform {
   required_version = "= 0.12.18"
   backend "s3" {
-    bucket = "daisu8e.com.terraform.old"
-    key = "terraform.tfstate"
     region = "us-east-1"
+    shared_credentials_file = "~/.aws/credentials"
+    profile = "portfolio-production-infrastructure-circleci"
+    bucket = "daisu8e.com.terraform"
+    key = "terraform.tfstate"
   }
 }
 
 provider "aws" {
   version = "= 2.22.0"
-  shared_credentials_file = "~/.aws/credentials"
   region = "us-east-1"
+  shared_credentials_file = "~/.aws/credentials"
+  profile = "portfolio-production-infrastructure-circleci"
 }
 
 module "code" {
@@ -27,9 +31,5 @@ module "code" {
 }
 
 output "result" {
-  value = <<RESULT
-the following:
-
-${module.code.result}
-RESULT
+  value = "\n\n${module.code.result}"
 }

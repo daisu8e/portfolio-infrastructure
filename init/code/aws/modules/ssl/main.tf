@@ -1,14 +1,14 @@
 variable "ssl" {}
 
 resource "aws_acm_certificate" "this" {
-  tags = {
-    Name = var.ssl.name
-  }
   domain_name = var.ssl.domain
   subject_alternative_names = ["*.${var.ssl.domain}"]
   validation_method = "DNS"
   lifecycle {
     create_before_destroy = true
+  }
+  tags = {
+    Name = var.ssl.tag
   }
 }
 

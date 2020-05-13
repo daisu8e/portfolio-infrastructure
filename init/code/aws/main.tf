@@ -11,11 +11,10 @@ locals {
     prefix = var.env.name
   }
   ssl = {
-    name = var.env.name
     domain = var.env.root_domain
+    tag = var.env.name
   }
   website = {
-    name = var.env.name
     domain = var.env.init_domain
   }
 }

@@ -1,13 +1,14 @@
 resource "aws_cloudfront_distribution" "this" {
   enabled = true
-  aliases = [var.application.domain]
+#  aliases = [var.application.domain]
+  aliases = []
   viewer_certificate {
     acm_certificate_arn = var.ssl.acm_certificate_arn
     ssl_support_method = "sni-only"
   }
   origin {
-    origin_id = aws_s3_bucket.this.id
-    domain_name = aws_s3_bucket.this.bucket_domain_name
+    origin_id = aws_s3_bucket.new.id
+    domain_name = aws_s3_bucket.new.bucket_domain_name
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.this.cloudfront_access_identity_path
     }
@@ -20,7 +21,7 @@ resource "aws_cloudfront_distribution" "this" {
     error_caching_min_ttl = 300
   }
   default_cache_behavior {
-    target_origin_id = aws_s3_bucket.this.id
+    target_origin_id = aws_s3_bucket.new.id
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods = ["GET", "HEAD"]
     cached_methods = ["GET", "HEAD"]
@@ -41,10 +42,10 @@ resource "aws_cloudfront_distribution" "this" {
   }
   is_ipv6_enabled = true
   logging_config {
-    bucket = aws_s3_bucket.logs.bucket_domain_name
+    bucket = aws_s3_bucket.logs_new.bucket_domain_name
   }
 }
 
 resource "aws_cloudfront_origin_access_identity" "this" {
-  comment = var.application.name
+  comment = var.application.domain
 }

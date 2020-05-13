@@ -43,5 +43,5 @@ resource "aws_cloudfront_distribution" "this" {
 }
 
 resource "aws_cloudfront_origin_access_identity" "this" {
-  comment = var.website.name
+  comment = var.website.domain
 }
