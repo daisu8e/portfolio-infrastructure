@@ -12,8 +12,8 @@ terraform {
   backend "s3" {
     region = "us-east-1"
     shared_credentials_file = "~/.aws/credentials"
-    profile = "portfolio-testing-infrastructure-circleci"
-    bucket = "t.daisu8e.com.terraform"
+    profile = "portfolio-testing"
+    bucket = "t-init.daisu8e.com.terraform"
     key = "terraform.tfstate"
   }
 }
@@ -22,7 +22,7 @@ provider "aws" {
   version = "= 2.22.0"
   region = "us-east-1"
   shared_credentials_file = "~/.aws/credentials"
-  profile = "portfolio-testing-infrastructure-circleci"
+  profile = "portfolio-testing"
 }
 
 module "code" {

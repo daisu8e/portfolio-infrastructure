@@ -1,6 +1,9 @@
 variable "env" {}
 
 locals {
+  terraform_backend = {
+    app_domain = var.env.app_domain
+  }
   user = {
     prefix = var.env.name
   }
@@ -9,10 +12,16 @@ locals {
   }
   ssl = {
     domain = var.env.root_domain
+    tag = var.env.name
   }
-  application = {
-    domain = var.env.app_domain
+  website = {
+    domain = var.env.init_domain
   }
+}
+
+module "terraform_backend" {
+  source = "./modules/terraform_backend"
+  terraform_backend = local.terraform_backend
 }
 
 module "user" {
@@ -30,18 +39,18 @@ module "ssl" {
   ssl = local.ssl
 }
 
-module "application" {
-  source = "./modules/application"
-  application = local.application
+module "website" {
+  source = "./modules/website"
+  website = local.website
   ssl = module.ssl
-  ip_white_list = module.parameter.ip_white_list
 }
 
 output "result" {
   value = join("\n", [
+    module.terraform_backend.result,
     module.user.result,
     module.parameter.result,
     module.ssl.result,
-    module.application.result,
+    module.website.result,
   ])
 }
