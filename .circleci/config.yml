@@ -58,10 +58,12 @@ workflows:
   testing:
     jobs:
       - test_testing:
+          context: portfolio-testing-infrastructure-circleci
           filters:
             branches:
               only: testing
       - deploy_testing:
+          context: portfolio-testing-infrastructure-circleci
           requires:
             - test_testing
 
