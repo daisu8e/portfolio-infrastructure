@@ -70,13 +70,16 @@ workflows:
   production:
     jobs:
       - test_staging:
+          context: portfolio-staging-infrastructure-circleci
           filters:
             branches:
               only: master
       - deploy_staging:
+          context: portfolio-staging-infrastructure-circleci
           requires:
             - test_staging
       - test_production:
+          context: portfolio-production-infrastructure-circleci
           requires:
             - deploy_staging
       - approve:
@@ -84,5 +87,6 @@ workflows:
           requires:
             - test_production
       - deploy_production:
+          context: portfolio-production-infrastructure-circleci
           requires:
             - approve
