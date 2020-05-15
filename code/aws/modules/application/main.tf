@@ -12,7 +12,6 @@ ${path.module} = {
   }
   cloudfront = {
     distribution = ${aws_cloudfront_distribution.this.id}
-    hosted_zone_id = ${aws_cloudfront_distribution.this.hosted_zone_id}
     domain_name = ${aws_cloudfront_distribution.this.domain_name}
   }
 }
