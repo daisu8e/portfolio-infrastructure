@@ -10,8 +10,12 @@ locals {
   ssl = {
     domain = var.env.root_domain
   }
+  basic_authentication = {
+    prefix = var.env.name
+  }
   application = {
     domain = var.env.app_domain
+    basic_authentication = var.env.basic_authentication
   }
 }
 
@@ -30,11 +34,18 @@ module "ssl" {
   ssl = local.ssl
 }
 
+module "basic_authentication" {
+  source = "./modules/basic_authentication"
+  basic_authentication = local.basic_authentication
+  parameter = module.parameter.basic_authentication
+}
+
 module "application" {
   source = "./modules/application"
   application = local.application
   ssl = module.ssl
   ip_white_list = module.parameter.ip_white_list
+  basic_authentication = module.basic_authentication
 }
 
 output "result" {
@@ -42,6 +53,7 @@ output "result" {
     module.user.result,
     module.parameter.result,
     module.ssl.result,
+    module.basic_authentication.result,
     module.application.result,
   ])
 }

@@ -4,6 +4,7 @@ locals {
     root_domain = "daisu8e.com"
     app_domain = "t.daisu8e.com"
     init_domain = "t-init.daisu8e.com"
+    basic_authentication = true
   }
 }
 

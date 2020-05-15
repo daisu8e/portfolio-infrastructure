@@ -1,0 +1,21 @@
+'use strict';
+
+exports.handler = (event, context, callback) => {
+
+  const request = event.Records[0].cf.request;
+  const headers = request.headers;
+
+  const username = '${username}';
+  const password = '${password}';
+  const key = 'Basic ' + new Buffer(username + ':' + password).toString('base64');
+  const ok = headers.authorization && headers.authorization[0].value === key;
+
+  const response = {
+    status: '401',
+    statusDescription: 'Unauthorized',
+    headers: { 'www-authenticate': [{ key: 'WWW-Authenticate', value:'Basic' }] },
+    body: 'Unauthorized'
+  };
+
+  callback(null, ok ? request : response);
+};

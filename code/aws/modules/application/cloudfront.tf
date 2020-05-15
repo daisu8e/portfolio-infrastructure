@@ -34,6 +34,13 @@ resource "aws_cloudfront_distribution" "this" {
         forward = "none"
       }
     }
+    dynamic "lambda_function_association" {
+      for_each = var.application.basic_authentication ? [{}] : []
+      content {
+        event_type = "viewer-request"
+        lambda_arn = var.basic_authentication.lambda_arn
+      }
+    }
   }
   restrictions {
     geo_restriction {
