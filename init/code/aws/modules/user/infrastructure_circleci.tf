@@ -1,10 +1,11 @@
 locals {
   policies = [
     data.aws_iam_policy.iam_full_access,
+    data.aws_iam_policy.amazon_ssm_read_only_access,
     data.aws_iam_policy.aws_certificate_manager_read_only,
+    data.aws_iam_policy.aws_lambda_full_access,
     data.aws_iam_policy.amazon_s3_full_access,
     data.aws_iam_policy.cloudfront_full_access,
-    data.aws_iam_policy.amazon_ssm_read_only_access,
   ]
 }
 

@@ -1,7 +1,6 @@
 resource "aws_cloudfront_distribution" "this" {
   enabled = true
-#  aliases = [var.application.domain]
-  aliases = []
+  aliases = [var.application.domain]
   viewer_certificate {
     acm_certificate_arn = var.ssl.acm_certificate_arn
     ssl_support_method = "sni-only"
@@ -32,6 +31,13 @@ resource "aws_cloudfront_distribution" "this" {
       query_string = false
       cookies {
         forward = "none"
+      }
+    }
+    dynamic "lambda_function_association" {
+      for_each = var.application.basic_authentication ? [{}] : []
+      content {
+        event_type = "viewer-request"
+        lambda_arn = var.basic_authentication.lambda_arn
       }
     }
   }
