@@ -1,7 +1,6 @@
 resource "aws_cloudfront_distribution" "this" {
   enabled = true
-#  aliases = [var.application.domain]
-  aliases = []
+  aliases = [var.application.domain]
   viewer_certificate {
     acm_certificate_arn = var.ssl.acm_certificate_arn
     ssl_support_method = "sni-only"
