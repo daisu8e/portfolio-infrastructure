@@ -12,8 +12,7 @@ terraform {
   required_version = "= 0.12.18"
   backend "s3" {
     region = "us-east-1"
-    shared_credentials_file = "~/.aws/credentials"
-    profile = "portfolio-testing-infrastructure-circleci"
+    shared_credentials_file = "./.aws/credentials.local"
     bucket = "t.daisu8e.com.terraform"
     key = "terraform.tfstate"
   }
@@ -22,8 +21,7 @@ terraform {
 provider "aws" {
   version = "= 2.22.0"
   region = "us-east-1"
-  shared_credentials_file = "~/.aws/credentials"
-  profile = "portfolio-testing-infrastructure-circleci"
+  shared_credentials_file = "./.aws/credentials.local"
 }
 
 provider "archive" {
