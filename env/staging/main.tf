@@ -26,6 +26,10 @@ provider "aws" {
   profile = "portfolio-staging-infrastructure-circleci"
 }
 
+provider "archive" {
+  version = "= 1.3"
+}
+
 module "code" {
   source = "../../code"
   env = local.env
